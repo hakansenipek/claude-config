@@ -1,0 +1,58 @@
+---
+name: scoring-engine
+description: Özellik (feature) bazlı skorlama/tahmin motoru tasarım standartları. Kullanıcı bir skorlama sistemi, puanlama motoru, tahmin modeli, feature mühendisliği, ağırlıklandırma, backtest veya "en iyi adayı sırala" tipi bir sistem istediğinde MUTLAKA bu skill'i kullan. "Skor hesapla", "puanlama yap", "feature ekle", "ağırlıkları ayarla", "backtest çalıştır", "tahmin motoru" gibi ifadeler geçtiğinde de kullan. Ölçülebilir, backtest'le doğrulanan, açıklanabilir skorlama motorları üretir.
+---
+
+# Scoring Engine
+
+Özellik bazlı skorlama/sıralama motorları (adayları puanla → sırala → öner) için tasarım standartları. Projeye özel detaylar (domain, feature listesi, veri tabloları) CLAUDE.md'dedir — bu skill evrensel yöntemi taşır.
+
+## Temel felsefe
+
+1. **Deterministik çekirdek**: Skor hesabı saf koddur — aynı girdi her zaman aynı skoru verir. LLM skor HESAPLAMAZ; LLM'in rolü varsa hazır skorları yorumlamaktır (bkz. `ai-report` skill).
+2. **Açıklanabilirlik**: Her toplam skor, bileşen feature skorlarına ayrıştırılabilir olmalı. "Neden bu aday önde?" sorusunun cevabı her zaman verilebilmeli.
+3. **Kanıt olmadan feature yok**: Bir feature'ın motorda kalma hakkı backtest'te gösterdiği katkıdır, sezgi değil. Katkısı ölçülemeyen feature eklenmez; ölçülüp katkısız çıkan çıkarılır.
+
+## Mimari
+
+Standart dosya ayrımı (Python varsayılan):
+
+```
+engine/
+  ozellikler.py   # feature hesaplama — her feature ayrı fonksiyon
+  skorla.py       # ağırlıklandırma + toplam skor + sıralama
+  config.py       # ağırlıklar ve eşikler TEK yerde (veya yaml/json)
+backtest/
+  backtest.py     # geçmiş veriyle değerlendirme
+```
+
+- **Feature fonksiyonu sözleşmesi**: girdi = aday + bağlam verisi, çıktı = normalize skor (0-1 veya 0-100, projede TEK ölçek seç ve hiç sapma). Veri eksikse `None` döner — sahte nötr değer (0.5 gibi) üretme; eksiklik ağırlıklandırmada açıkça ele alınır (feature atlanır, kalan ağırlıklar yeniden normalize edilir).
+- **Ağırlıklar config'te**: kod içine gömülü sayı YOK. Config sürümlenir (`v1`, `v1_5` gibi) — hangi sürümle hangi backtest sonucunun alındığı izlenebilir olmalı.
+- Toplam skor varsayılanı ağırlıklı ortalama; feature'lar arası etkileşim gerekiyorsa (X yalnızca Y varken anlamlı) bunu ayrı bir bileşik feature olarak yaz, formülü karmaşıklaştırma.
+
+## Feature tasarımı
+
+- Her feature TEK hipotezi kodlar ve adı hipotezi söyler (`form_skor`, `zemin_uyum` gibi). "Karışık sinyal" feature'ı yazma.
+- Normalizasyon yöntemini feature içinde belgele (min-max mı, persentil mi, kategori eşlemesi mi) — yorum satırıyla.
+- Sızıntı (leakage) kontrolü: feature, tahmin ANINDA bilinemeyecek veri kullanamaz (sonuç sonrası oluşan alanlar, gelecek tarihli kayıtlar). Her yeni feature'da açıkça sor: "Bu bilgi karar anında elimde olur muydu?" Yalnızca belirli zamanda oluşan veriler (ör. gün içinde açıklanan oranlar) varsa, backtest bunu zaman-uyumlu kullanmalı.
+- Veri doluluk oranını ölç: bir feature adayların büyük kısmında `None` kalıyorsa (ör. %40+) önce veri sorununu çöz, feature'ı sonra değerlendir.
+
+## Backtest standartları
+
+- **Baseline zorunlu**: Motor her zaman naif bir referansla karşılaştırılır (rastgele seçim, popülerlik/favori sırası gibi). "Skor %X isabetli" tek başına anlamsız; "baseline %Y'ye karşı %X" anlamlı.
+- **Zaman bazlı ayırma**: eğitim/ayar dönemi ile test dönemi zamanda ayrılır (walk-forward). Ağırlıklar test dönemine bakılarak AYARLANMAZ — test verisiyle ayar yapıldıysa o test yanmıştır, yeni dönem gerekir.
+- **Metrik seçimi domain'e göre**: sıralama problemi ise isabet@k (ilk k tahminde doğru var mı), ikili sonuç ise precision/recall, getiri problemi ise birim başına net getiri. Metrik CLAUDE.md'de tanımlanır ve sürümler arası SABİT tutulur — metrik değişirse eski sonuçlarla karşılaştırma yapılamaz.
+- **Dürüst raporlama**: örneklem büyüklüğü her sonuçta belirtilir; küçük örneklemde (ör. <100 olay) sonuç "gösterge" diye etiketlenir, zafer ilan edilmez. Başarısız hipotez de raporlanır ve kayda geçer — başarısızlık bilgidir, silinmez.
+- Sürüm karşılaştırması: yeni feature/ağırlık seti (`v2`) eski setle (`v1`) AYNI dönem ve AYNI metrikle yan yana koşulur; tek tablo halinde raporlanır.
+
+## Sürüm ve deney disiplini
+
+- Her deney kaydı: config sürümü + veri aralığı + metrik sonuçları + tarih. Basit bir `DENEYLER.md` dosyası yeterli; hafızaya güvenme.
+- Aynı anda TEK değişken değiştir: hem yeni feature hem yeni ağırlık aynı deneyde denenmez — hangisinin etki ettiği bilinemez.
+- Prod'a alma eşiği: yeni sürüm, baseline'ı VE mevcut sürümü anlamlı farkla geçmeli; berabere ise basit olan kazanır.
+
+## Çıktı formatı
+
+- Yeni feature: hipotez (1 cümle) → hesaplama kodu → normalizasyon notu → backtest planı (hangi dönem, hangi metrik).
+- Backtest sonucu: karşılaştırma tablosu (sürümler × metrikler, örneklem büyüklüğü ile) + 2-3 cümle yorum + net karar önerisi (al / alma / veri yetersiz).
+- Kod dosya yollarıyla verilir; config değişiklikleri ayrı ve açık gösterilir.
