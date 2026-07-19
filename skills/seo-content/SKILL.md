@@ -58,3 +58,26 @@ Türkçe pazar için SEO standartları: teknik altyapı (Next.js App Router) + i
 - Teknik iş: dosya yollarıyla kod (`app/sitemap.ts`, `generateMetadata` örneği, JSON-LD bloğu).
 - İçerik işi: plan tablosu veya sayfa taslağı (H yapısı + her bölümün 1 cümle özeti); tam metin istenirse `copywriting` kurallarıyla yazılır.
 - Sonda kısa kontrol notu: GSC doğrulama, sitemap gönderimi, canonical tutarlılığı.
+
+## On-page SEO denetimi
+
+Mevcut sayfa/site denetiminde standart kontrol listesi — denetim çıktısı "sorun → etki → düzeltme" formatında verilir, genel geçer tavsiye listesi değil:
+
+1. **Title/description**: her sayfada benzersiz, hedef sorguyu taşıyan title (≤60 karakter) ve tıklama gerekçesi veren description (≤155); şablon tekrarı işaretlenir.
+2. **Başlık hiyerarşisi**: tek H1, mantıklı H2/H3 ağacı; başlıkta anahtar kelime doğal kullanım (yığma yasak).
+3. **İndekslenebilirlik**: robots/noindex kazaları, canonical doğruluğu, yanlışlıkla client-only render edilen kritik içerik (GEO kuralıyla birlikte).
+4. **İç bağlantı**: yetim sayfalar, kırık linkler, anchor metinlerin açıklayıcılığı ("tıklayın" yasak).
+5. **Görsel**: alt metinler, dosya adları, boyut/format (WebP), lazy loading — LCP etkisiyle birlikte raporlanır.
+6. **Core Web Vitals**: LCP/CLS/INP ölçümü gerçek veriden (CrUX/Search Console); tahminle "hızlı sayılır" denmez.
+7. **Yapısal veri**: mevcut schema'ların doğrulaması + sayfa tipine göre eksik fırsatlar.
+Denetim önceliklendirilir: en yüksek trafik/potansiyel sayfadan başlanır, her şeyi aynı anda düzeltme planı yazılmaz.
+
+## Pillar / hub-cluster otorite yapısı
+
+Konu otoritesi için içerik mimarisi — tekil blog yazıları yerine küme stratejisi:
+
+- **Pillar (hub) sayfa**: geniş konuyu kapsayan, sorgu hacmi yüksek ana rehber ("Okul CRM nedir ve nasıl seçilir"); her cluster yazısına bağlanır.
+- **Cluster yazıları**: pillar'ın alt sorularını derinlemesine cevaplar (uzun kuyruk sorgular); her biri pillar'a geri bağlanır ve ilgili kardeşlere yatay bağlanır.
+- **Kural**: pillar'sız cluster yazılmaz, cluster'sız pillar şişirilmez — küme planı içerik üretiminden ÖNCE tablo olarak çıkarılır (pillar | cluster başlıkları | hedef sorgu | durum).
+- Programatik sayfa ağları (programmatic-seo skill'i) bu yapıya hub üzerinden bağlanır; iki sistem ayrı adacık olmaz.
+- Küme tamamlandıkça performans izlenir: kümenin toplam görünürlüğü tekil yazı metriğinden önce gelir.

@@ -59,3 +59,22 @@ Amaca göre tür öner; kullanıcı tür belirttiyse ona uy:
 - Senaryo: saniye aralıklı sahne tablosu (sahne, görüntü, ekran metni, ses notu).
 - Tek içerik talebi: konsept (1-2 cümle) + senaryo/görsel tarifi + caption + üretim notları.
 - Plan talebi: takvim tablosu + ilk içeriğin tam açılımı örnek olarak.
+
+## İçerik stratejisi ve konu haritası
+
+Tekil içerik üretiminden önce strateji katmanı — plan yoksa üretim başlamaz:
+
+- **İçerik sütunları**: marka başına 3-5 sütun tanımlanır (ör. NukhetBu: tarif, teknik ipucu, mekân, sezon) ve her sütunun amacı bellidir (keşif / güven / dönüşüm). Sütun dışı rastgele içerik üretilmez.
+- **Konu haritası**: sütun × format matrisi (Reels/carousel/story) doldurulur; her konu hedef izleyici sorusuna bağlanır ("bunu kim neden izler/kaydeder?"). Cevabı olmayan konu listeden düşer.
+- **Takvim disiplini**: sürdürülebilir frekans belirlenir (haftada X) ve takvim en az 2 hafta ileriyi gösterir; "bugün ne paylaşsak" günü yaşanmaz. Takvim, approval-workflow taslak hattıyla uyumlu üretilir (üretim → onay → yayın tarihleri ayrı).
+- **Geri besleme döngüsü**: aylık gözden geçirmede sütun bazında performans (kaydetme/paylaşım öncelikli metrikler) değerlendirilir; işlemeyen sütun revize edilir veya emekli edilir — hissiyatla değil veriyle.
+
+## Reklam kreatif varyasyon üretimi
+
+Organik içerikten farklı olarak reklam kreatifi sistematik varyasyonla üretilir (strateji ve bütçe kararları ad-campaign-management'a tabidir — bu bölüm kreatifin kendisini üretir):
+
+- **Varyasyon matrisi**: kanca (3 farklı açı) × format (görsel/video/carousel) × CTA — tek "en iyi tahminimiz" kreatif yerine test edilebilir küçük set (4-6 varyant) üretilir.
+- **Kanca açıları**: problem-öncelikli / sonuç-öncelikli / sosyal kanıt-öncelikli / itiraz-kırıcı — aynı mesajın farklı giriş kapıları; copywriting davranışsal tetikleyici kuralları (gerçeklik şartı) burada da geçerlidir.
+- **İlk 2 saniye kuralı**: video reklamda kanca sessiz izlemede de çalışmalı (altyazı/görsel kanca); logo ile açılan reklam üretilmez.
+- **Yorgunluk yönetimi**: kazanan kreatifin varyasyonları hazırda bekletilir; frekans yükselince (ad-campaign-management metrik tablosuna göre) taze varyant devreye girer — sıfırdan üretim krizine düşülmez.
+- **Uyum**: platform reklam politikaları (yanıltıcı iddia, önce/sonra sağlık vaadi vb.) üretim aşamasında kontrol edilir; reddedilecek kreatif hiç üretilmez.

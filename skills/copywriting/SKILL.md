@@ -59,3 +59,14 @@ Sıra: kanca başlığı (problem veya sonuç) → destek alt başlık (nasıl) 
 - Uzun metinlerde (landing, e-posta) bölüm yapısıyla ver; kullanıcı doğrudan yapıştırabilsin.
 - Metnin hedefini varsaydıysan tek satırla belirt ("Hedef kitleyi X varsaydım").
 - Açıklama ve teori anlatma; metnin kendisi konuşsun.
+
+## Davranışsal tetikleyiciler
+
+Pazarlama psikolojisi ilkelerinin dürüst kullanımı. Kural: tetikleyici yalnızca GERÇEĞE dayanıyorsa kullanılır — sahte kıtlık/aciliyet dark pattern'dir ve yasaktır (cro skill'iyle tutarlı).
+
+- **Sosyal kanıt**: gerçek sayı/isim varsa en güçlü araç ("120 okul kullanıyor"); yoksa bu blok atlanır, "binlerce mutlu müşteri" uydurması yazılmaz.
+- **Kıtlık/aciliyet**: yalnızca gerçek sınırda ("pilot kontenjanı 5 okul", "fiyat 1 Eylül'de güncellenecek" — gerçekten güncellenecekse).
+- **Kayıptan kaçınma**: fayda cümlesinin ayna hali bazen daha güçlü ("ayda 10 saat kazanın" ↔ "her ay 10 saati Excel'e kaybetmeyin") — ikisinden bağlama uygun olan seçilir, korku pompalanmaz.
+- **Çapa (anchoring)**: fiyat sunumunda kıyas noktası verilir (mevcut alternatifin maliyeti, üst paket) — pricing skill'inin kademe kurgusuyla birlikte çalışır.
+- **Somut tek kişi**: "işletmeler" değil okuyucunun kendisi; senaryolu örnek tek kişi üzerinden anlatılır ("Ayşe Hanım sabah raporu 2 dakikada alır").
+- **Taahhüt tutarlılığı**: küçük ilk adım iste (ücretsiz dene, örnek rapor al), büyük kararı sonraya bırak — CTA merdiveni buna göre kurulur.
