@@ -51,6 +51,21 @@ backtest/
 - Aynı anda TEK değişken değiştir: hem yeni feature hem yeni ağırlık aynı deneyde denenmez — hangisinin etki ettiği bilinemez.
 - Prod'a alma eşiği: yeni sürüm, baseline'ı VE mevcut sürümü anlamlı farkla geçmeli; berabere ise basit olan kazanır.
 
+## Yaşayan model yönetimi (şampiyon/rakip döngüsü)
+
+Motor canlıya çıktıktan sonra ağırlıkların bakımı — tek seferlik kalibrasyonla bırakılmaz, kontrollü bir döngüyle yaşatılır.
+
+- **Config kaynağı canlıda tablodur**: Aktif ağırlıklar dosyadan değil, versiyonlu bir config tablosundan okunur. Her kayıt durum taşır: `aday / aktif / emekli / geri_alindi`; tip başına aynı anda TEK aktif config olur. Repo'daki config dosyaları yalnızca ilk yükleme ve deney içindir ve dosyada bu açıkça etiketlenir ("canlı kaynak değildir").
+- **Periyodik yeniden kalibrasyon**: Kayan pencereyle (son N dönem) yeniden ayar; değerlendirme her zaman ayara hiç girmemiş dokunulmamış test setinde yapılır. Şampiyon (aktif config) ile rakip (yeni aday) AYNI test setinde yan yana koşulur — farklı dönemlerde ölçülüp kıyaslanmaz.
+- **Terfi kuralları (otonom sistemde hepsi birden sağlanmalı)**: (1) ana metriklerde şampiyona karşı galibiyet, (2) çoklu alt-dönem doğrulaması (tek şanslı dönem değil, dilimlerin çoğunda üstünlük), (3) asgari örneklem eşiği (altındaysa hüküm yok, terfi yok), (4) ağırlık savrulma freni — tek terfide ağırlıklar sınırlı ölçüde değişebilir; büyük sıçrama isteyen aday kademeli terfi eder.
+- **Bekçi + otomatik geri alma**: Canlı performans iki referansla sürekli kıyaslanır: terfi anındaki test beklentisi ve piyasa/doğal baseline. Belirgin düşüş ARDIŞIK kontrollerde sürerse önceki aktif config'e otomatik dönüş yapılır (tek kötü kontrol yeterli değildir); küçük örneklemde bekçi hüküm vermez, bekler. Geri alınan config `geri_alindi` durumuna geçer ve bir daha OTOMATİK terfi edemez — ancak insan kararıyla yeniden aday olabilir.
+- **İnsanlı / otonom varyant**: Onay kapılı kurulumlarda terfi insan komutuyla olur (approval-workflow deseni); otonom kurulumda kapının yerini yukarıdaki kural seti alır. İkisi de meşrudur — seçim projeye aittir ve CLAUDE.md'de yazar.
+- **Denetlenebilirlik**: Her terfi ve geri alma, karar gerekçesiyle loglanır (hangi metrikler, hangi test seti, hangi eşikler sağlandı) — "neden bu config aktif?" sorusunun cevabı her an sorgulanabilir olmalı.
+
+## Sık hatalar
+
+- Kalibre edilmemiş ağırlıklarla özellik katkısı ölçmeye çalışmak: bir feature'ın ağırlığı ~0 iken katkısı da 0 görünür — bundan "özellik işe yaramıyor" sonucu çıkmaz. Katkı hükmü ancak ağırlık kalibrasyonundan SONRA verilir.
+
 ## Çıktı formatı
 
 - Yeni feature: hipotez (1 cümle) → hesaplama kodu → normalizasyon notu → backtest planı (hangi dönem, hangi metrik).

@@ -53,6 +53,10 @@ Sırayla, her adımda kaynağı belirterek:
      zayıf" uyarısı
    - AGF henüz oluşmamışsa (deklare aşaması) bu adım "AGF verisi henüz yok"
      notuyla atlanır.
+9. **Tahmin anı bağlamı:** her analizde tahminin HANGİ VERİYLE üretildiği
+   bellidir ve söylenir (ör. "sabah skoru, AGF'siz"). Aynı koşunun farklı
+   veri anlarındaki skorları (AGF'siz sabah / AGF'li öğleden sonra) ayrı
+   şeylerdir; biri diğerinin yerine geçmez, karşılaştırılırken karıştırılmaz.
 
 ## 2. Zemin Etkisi Çerçevesi
 
@@ -85,7 +89,30 @@ Matematik her öneride açık gösterilir:
 - **Bütçe ilkesi:** kullanıcı bütçe verdiyse kombinasyon o bütçeye göre
   kurulur; vermediyse dar/orta/geniş üç varyant sunulur.
 
-## 4. Çıktı Formatı
+## 4. Ölçüm ve Değerlendirme Disiplini (Model Performansı Konuşulurken)
+
+Model "iyi mi kötü mü" sorusu bu kurallarla cevaplanır:
+
+- **Örneklem eşiği:** ~100 koşunun altındaki isabet oranları "gösterge
+  bile değil" muamelesi görür — sayı verilir ama yanına örneklem uyarısı
+  ZORUNLU eklenir ve bu örneklemden model/kod hükmü çıkarılmaz. Tek günlük
+  sonuçla "model bozuldu/düzeldi" denmez.
+- **Baseline zorunlu:** hiçbir isabet oranı tek başına raporlanmaz; aynı
+  koşu setinde en az bir kıyas verilir — piyasa favorisi (AGF 1.si) ve/veya
+  rastgele seçim taban oranı. "%X tuttu" tek başına anlamsızdır.
+- **Elmalarla elmalar:** backtest hangi veriyle ölçüldüyse canlı kıyas o
+  veri koşuluyla yapılır. Final/yarış-sonu verisiyle ölçülen backtest,
+  eksik veriyle üretilen canlı tahminin tavanıdır, beklentisi değil.
+- **Doğru hedef sıralaması:** piyasa favorisini birincilik isabetinde
+  geçmek en zor hedeftir ve modelin tek başarı ölçüsü DEĞİLDİR. Gerçekçi
+  değer sırası: (1) tabela/plase isabetinde katkı, (2) value adaylarında
+  (düşük AGF + yüksek skor) artı getiri, (3) piyasayı yakalamak, (4) en son
+  piyasayı geçmek. Yorumlarda model bu çerçeveyle savunulur/eleştirilir.
+- **Versiyon ayrımı:** farklı veri anı veya farklı ağırlıkla üretilen
+  tahminler ayrı model versiyonu olarak izlenir; sonraki tahmin öncekini
+  ezerek ölçüm geçmişini yok etmez.
+
+## 5. Çıktı Formatı
 
 Koşu analizi çıktısı:
 
@@ -97,7 +124,7 @@ Koşu analizi çıktısı:
 5. Kupon istendiyse Bölüm 3 formatında öneri + maliyet
 6. Sorumluluk reddi (zorunlu, atlanamaz)
 
-## 5. Sık Hatalar (Yapma)
+## 6. Sık Hatalar (Yapma)
 
 - Ezberden jokey/antrenör ismi ve yüzdesi yazmak — bu skill'in varlık sebebi
   bunu engellemek.
@@ -106,4 +133,7 @@ Koşu analizi çıktısı:
 - Motor sıralamasını LLM sezgisiyle ezip yeniden sıralamak.
 - Düşen formdaki atı sırf skoru yüksek diye banko ilan etmek.
 - AGF boşken value analizi yapmış gibi yazmak.
+- Küçük örneklemden (tek gün, birkaç düzine koşu) model hükmü çıkarmak.
+- İsabet oranını baseline'sız, çıplak yüzde olarak sunmak.
+- Farklı veri anlarında üretilmiş tahminleri aynı şeymiş gibi kıyaslamak.
 - Sorumluluk reddini unutmak veya kısaltmak.
