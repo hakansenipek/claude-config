@@ -30,14 +30,14 @@ Amaca göre tür öner; kullanıcı tür belirttiyse ona uy:
 - Marka paleti ve fontlar her içerikte tutarlı (değerler CLAUDE.md'de). Şablonlaşabilir öğeler (kapak düzeni, alt bant, logo konumu) bir kez tanımlanıp tekrar kullanılır.
 - Kapak görseli (Reels cover / ilk carousel karesi) tek başına anlamlı olmalı: net başlık + görsel — profil ızgarasında da okunur.
 - Fotoğraf seçiminde: gerçek/doğal kareler stok görünümlü karelere tercih edilir; yeme-içme içeriğinde doğal ışık ve yakın çekim.
-- Boyutlar: post 1080x1350 (4:5, akışta daha fazla alan), carousel kareleri aynı boyutta, story/Reels 1080x1920.
+- Boyutlar: post 1080x1350 (4:5, akışta daha fazla alan), carousel kareleri aynı boyutta, story/Reels 1080x1920. **Platform standart boyutlarının tek kaynağı bu skill'dir**; CLAUDE.md yalnızca marka-özel istisnaları tutar, `media-editing` bu boyutları uygular.
 
 ## AI video üretimi (Higgsfield vb.)
 
 - AI üretim akışı: önce senaryo ve sahne listesi netleşir → sahne başına prompt yazılır → üretilen kesitler birleştirilir. Prompt'suz "bir video yap" ile araca gitme.
 - Sahne prompt'u şablonu: [çekim tipi] + [özne ve eylem] + [ortam/ışık] + [kamera hareketi] + [stil]. Türkçe metin bindirmeleri AI'a yaptırma — metin bindirme montajda eklenir (AI üretimli Türkçe yazı hatalı çıkar).
 - Marka yüzü/ürün gerçekse: gerçek çekim + AI b-roll karışımı öner; tamamen sentetik içerikte markanın gerçek görselleriyle tutarlılığı kontrol et.
-- Programatik üretim (PIL + ffmpeg) tekrarlanan şablon işlerde (fiyat duyurusu, haftalık menü gibi) AI'dan önce değerlendirilir — deterministik, ücretsiz, marka fontlarıyla birebir.
+- Programatik üretim tekrarlanan şablon işlerde (fiyat duyurusu, haftalık menü gibi) AI'dan önce değerlendirilir — deterministik, ücretsiz, marka fontlarıyla birebir. Üretimin tekniği (araç seçimi, bindirme, encode ayarları) `media-editing`'e tabidir.
 
 ## İçerik planı / takvim
 

@@ -11,11 +11,18 @@ Uygulama içinde "yükle → sakla → listele → sil" yapan medya modülünün
 
 ## 1. İki taraflı işleme: client küçültür, sunucu doğrular
 
-- **Client tarafı küçültme UX içindir**, güvenlik değil: canvas ile en uzun kenar ~1280-1600px, WebP kalite 0.80-0.85. Amaç mobil veriyi ve yükleme süresini düşürmek.
+Bu modülün işleme sözleşmesi (işlemenin **nasıl** yapıldığı `media-editing`'in "Uygulama içi otomatik yükleme hattı" bölümündedir — burada tekrarlanmaz):
+
+- **Client tarafı küçültme UX içindir**, güvenlik değil. Amaç mobil veriyi ve yükleme süresini düşürmek; tek savunma hattı olursa modül güvensizdir.
 - HEIC/HEIF girdisi (iPhone) client'ta JPEG'e çevrilir. Dönüştürücü kütüphane **lazy import** edilir (`await import('heic2any')`) — ağır kütüphane ana bundle'a girmez.
-- **Sunucu client'a güvenmez.** Route'a doğrudan istek atılabileceği varsayılır: boyut sınırı, MIME + magic byte kontrolü ve gerekiyorsa sharp ile yeniden işleme sunucuda tekrar yapılır. Client küçültmesi tek savunma hattıysa modül güvensizdir.
-- EXIF/GPS temizliği ve `.rotate()` (yön düzeltme) **sunucuda zorunlu** — client'ta canvas'tan geçen dosya EXIF'ini kaybeder ama işlenmemiş dosya için garanti yoktur.
-- Varyantlar (thumb / md / lg) sunucuda üretilir; client'ın gönderdiği dosya "orijinal" muamelesi görmez.
+- **Sunucu client'a güvenmez.** Route'a doğrudan istek atılabileceği varsayılır: boyut sınırı ve MIME + magic byte kontrolü (`security-baseline`) sunucuda tekrar yapılır, ardından dosya işleme hattından geçer.
+- Yön düzeltme + EXIF/GPS temizliği ve varyant üretimi (`thumb` / `md` / `lg`) **sunucuda** olur; client'ın gönderdiği dosya "orijinal" muamelesi görmez.
+
+**Orijinal dosya politikası (karar gerektirir, CLAUDE.md'ye yazılır):**
+
+- Varsayılan: **orijinal saklanmaz**, en büyük varyant (`lg`) kanonik dosyadır. Storage maliyeti ve gizlilik yüzeyi küçülür.
+- Orijinal gerekiyorsa (baskı çıktısı, arşiv yükümlülüğü, sonradan farklı varyant üretme ihtiyacı) ayrı bir private bucket/prefix'te tutulur ve **hiçbir zaman doğrudan servis edilmez**. "Belki lazım olur" gerekçesi yeterli değildir.
+- `media-editing`'in "orijinali koru, üzerine yazma" kuralı offline/toplu iş içindir; uygulama içinde yüklenen dosyanın karşılığı yukarıdaki karardır.
 
 ## 2. Depolama düzeni (storage path)
 
@@ -62,7 +69,7 @@ Storage ve veritabanı iki ayrı sistemdir; ortak transaction yoktur. Bu yüzden
 - Dosya başına durum gösterilir: bekliyor → işleniyor → yükleniyor → tamam/hata. Bir dosyanın hatası kalanları iptal etmez; sonunda özet verilir ("8 yüklendi, 1 başarısız").
 - Yükleme bitince liste yenilenir. Optimistic ekleme yapılıyorsa hata halinde geri alınır.
 - Silme geri alınamaz: onay zorunlu. Tek kayıtta basit onay yeterli; toplu veya kritik silmede **ne silineceğini gösteren** modal kullanılır.
-- Listede thumb varyantı gösterilir, tam boy yalnızca önizlemede yüklenir. `loading="lazy"` + sabit en-boy oranlı kutu (layout shift olmasın).
+- Listede `thumb` varyantı gösterilir, `lg` yalnızca önizlemede yüklenir (varyant adları `media-editing` sözlüğünden). `loading="lazy"` + sabit en-boy oranlı kutu (layout shift olmasın).
 
 ## 8. Asgari tablo şeması
 
@@ -80,6 +87,7 @@ Storage ve veritabanı iki ayrı sistemdir; ortak transaction yoktur. Bu yüzden
 - [ ] Liste sayfalanıyor mu?
 - [ ] Service-role kullanan route'ta açık yetki kontrolü var mı?
 - [ ] Bucket public/private kararı içerikle uyumlu mu?
+- [ ] Orijinal dosya politikası (saklanır/saklanmaz) CLAUDE.md'de yazılı mı?
 - [ ] Multi-tenant ise tenant filtresi + RLS + path öneki üçü de var mı?
 
 ## Sık hatalar
